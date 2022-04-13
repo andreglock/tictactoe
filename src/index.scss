@@ -1,0 +1,105 @@
+body {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.px1 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.group {
+  display: flex;
+  justify-content: space-between;
+}
+
+#board-container {
+  width: 95vw;
+  height: 95vw;
+  @media (min-width: 768px) {
+    width: 50vw;
+    height: 50vw;
+  }
+  @media (min-width: 1024px) {
+    width: 75vh;
+    height: 75vh;
+  }
+  display: grid;
+  margin: auto;
+  margin-top: 10vh;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: 33% 33% 33%;
+  grid-gap: 2px;
+  > div {
+    cursor: pointer;
+    box-shadow: 0 0 0 2px black;
+    background-position: center;
+    background-size: cover;
+  }
+  > div.x {
+    background-image: url('./img/x.svg');
+  }
+  > div.o {
+    background-image: url('./img/o.svg');
+  }
+}
+
+div.tictactoe-overlay {
+  position: absolute;
+  top: 0px;
+  min-height: calc(100vh - 64px);
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  div.overlay-content {
+    flex-direction: column;
+    background-color: rgb(156, 156, 156);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    max-width: 95vw;
+    padding: 20px;
+    @media (min-width: 768px) {
+      padding: 100px;
+      width: 70vw;
+    }
+    @media (min-width: 1024px) {
+      width: 716px;
+    }
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px black;
+    div.text-container {
+      text-align: center;
+      font-size: large;
+      background-color: white;
+      padding: 50px;
+    }
+    button {
+      cursor: pointer;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 20px;
+      border: none;
+    }
+  }
+  div.message {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.90);
+    font-size: xx-large;
+    padding: 100px;
+    color: black;
+  }
+}
