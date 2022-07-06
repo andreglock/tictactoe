@@ -3,7 +3,7 @@ import {
 	CLICK_FOUR, CLICK_FIVE, CLICK_SIX,
 	CLICK_SEVEN, CLICK_EIGHT, CLICK_NINE, 
 	BEST_MOVE, RESET,
-} from './actionTypes'
+} from './actionTypes';
 
 interface InitBoardAction {
 	type: typeof INIT

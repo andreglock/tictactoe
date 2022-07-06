@@ -90,6 +90,7 @@ export function result(value: string[], action: number) {
 
 export function minimax(gameBoard: string[]) {
     
+    // Assign a value to every action on the board:
     function findValue(board: string[]) {
         const winner = utility(board);
         if (winner !== 0) {
@@ -125,6 +126,7 @@ export function minimax(gameBoard: string[]) {
         }
         let bestAction = -1;
         const possibleActions = findPossibleMoves(board);
+        // Iterate over the actions and pick the one with the best value:
         for (const action of possibleActions) {
             const actionValue = findValue(result(board, action));
             if (playerToPlay === 'x' && best < actionValue) {
@@ -139,7 +141,7 @@ export function minimax(gameBoard: string[]) {
         return bestAction;
     }
 
-    const bestMove = findBest(gameBoard)
+    const bestMove = findBest(gameBoard);
 
     return result(gameBoard, bestMove);
 }

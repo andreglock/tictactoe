@@ -5,7 +5,7 @@ import { findPossibleMoves, findWinner } from './features/board/ticTacToe';
 
 export default function TicTacToeApp () {
     const board = useSelector(selectors.getCurrentBoard);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const [ showOverlay, setShowOverlay ] = useState(true);
     const [ showMessage, setShowMessage ] = useState(false);
     const [ message, setMessage ] = useState("");
@@ -19,10 +19,11 @@ export default function TicTacToeApp () {
             setMessage(`Game over: tie!`);
             setShowMessage(!showMessage);
         }
-    }, [board])
+    }, [board]);
 
     return <div id="tictactoe-container">
         {showOverlay &&
+            /* Could be in another component */
             <div className="tictactoe-overlay">
                 <div className="overlay-content">
                     <div className="text-container">
