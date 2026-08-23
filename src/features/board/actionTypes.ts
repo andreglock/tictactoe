@@ -10,3 +10,4 @@ export const CLICK_EIGHT = 'CLICK_EIGHT';
 export const CLICK_NINE = 'CLICK_NINE';
 export const BEST_MOVE = 'BEST_MOVE';
 export const RESET = 'RESET';
+export const SET_MODE = 'SET_MODE';

@@ -88,60 +88,105 @@ export function result(value: string[], action: number) {
     return board;
 }
 
-export function minimax(gameBoard: string[]) {
-    
-    // Assign a value to every action on the board:
-    function findValue(board: string[]) {
-        const winner = utility(board);
-        if (winner !== 0) {
-            return winner;
-        }
-        const possibleMoves = findPossibleMoves(board);
-        if (possibleMoves.length === 1) {
-            return utility(result(board, possibleMoves[0]))
-        }
-        const playerToPlay = player(board);
-        let best: number;
-        if (playerToPlay === 'x') {
-            best = -2;
-            for (const action of possibleMoves) {
-                best = Math.max(best, findValue(result(board, action)));
-            }
-        } else {
-            best = 2;
-            for (const action of possibleMoves) {
-                best = Math.min(best, findValue(result(board, action)));
-            } 
-        }
-        return best;
+export type Mode = 'good' | 'bad' | 'ugly';
+
+// Assign a value to every action on the board:
+function findValue(board: string[]): number {
+    const winner = utility(board);
+    if (winner !== 0) {
+        return winner;
     }
-
-    function findBest(board: string[]) {
-        const playerToPlay = player(board);
-        let best: number;
-        if (playerToPlay === 'x') {
-            best = -2;
-        } else {
-            best = 2;
-        }
-        let bestAction = -1;
-        const possibleActions = findPossibleMoves(board);
-        // Iterate over the actions and pick the one with the best value:
-        for (const action of possibleActions) {
-            const actionValue = findValue(result(board, action));
-            if (playerToPlay === 'x' && best < actionValue) {
-                best = actionValue;
-                bestAction = action;
-            }
-            if (playerToPlay === 'o' && best > actionValue) {
-                best = actionValue;
-                bestAction = action;
-            }
-        }
-        return bestAction;
+    const possibleMoves = findPossibleMoves(board);
+    if (possibleMoves.length === 1) {
+        return utility(result(board, possibleMoves[0]))
     }
+    const playerToPlay = player(board);
+    let best: number;
+    if (playerToPlay === 'x') {
+        best = -2;
+        for (const action of possibleMoves) {
+            best = Math.max(best, findValue(result(board, action)));
+        }
+    } else {
+        best = 2;
+        for (const action of possibleMoves) {
+            best = Math.min(best, findValue(result(board, action)));
+        }
+    }
+    return best;
+}
 
-    const bestMove = findBest(gameBoard);
+// "The bad": always plays to win, i.e. the optimal minimax move for whoever is to play.
+function findBestMove(board: string[]) {
+    const playerToPlay = player(board);
+    let best: number;
+    if (playerToPlay === 'x') {
+        best = -2;
+    } else {
+        best = 2;
+    }
+    let bestAction = -1;
+    const possibleActions = findPossibleMoves(board);
+    // Iterate over the actions and pick the one with the best value:
+    for (const action of possibleActions) {
+        const actionValue = findValue(result(board, action));
+        if (playerToPlay === 'x' && best < actionValue) {
+            best = actionValue;
+            bestAction = action;
+        }
+        if (playerToPlay === 'o' && best > actionValue) {
+            best = actionValue;
+            bestAction = action;
+        }
+    }
+    return bestAction;
+}
 
-    return result(gameBoard, bestMove);
+// "The good": always takes the worst move, i.e. the one with the lowest minimax score.
+function findWorstMove(board: string[]) {
+    const playerToPlay = player(board);
+    let worst: number;
+    if (playerToPlay === 'x') {
+        worst = 2;
+    } else {
+        worst = -2;
+    }
+    let worstAction = -1;
+    const possibleActions = findPossibleMoves(board);
+    // Iterate over the actions and pick the one with the best value:
+    for (const action of possibleActions) {
+        const actionValue = findValue(result(board, action));
+        if (playerToPlay === 'x' && worst > actionValue) {
+            worst = actionValue;
+            worstAction = action;
+        }
+        if (playerToPlay === 'o' && worst < actionValue) {
+            worst = actionValue;
+            worstAction = action;
+        }
+    }
+    return worstAction;
+}
+
+// "The ugly": plays a uniformly random legal move.
+function findRandomMove(board: string[]) {
+    const possibleMoves = findPossibleMoves(board);
+    return possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+}
+
+export function playMove(gameBoard: string[], mode: Mode) {
+    let action: number;
+    switch (mode) {
+        case 'good':
+            action = findWorstMove(gameBoard);
+            break;
+        case 'ugly':
+            action = findRandomMove(gameBoard);
+            break;
+        case 'bad':
+        default:
+            action = findBestMove(gameBoard);
+            break;
+    }
+    return result(gameBoard, action);
 }
