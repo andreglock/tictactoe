@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectors, actionTypes } from './features/board'
-import { findPossibleMoves, findWinner } from './features/board/ticTacToe';
+import { findPossibleMoves, findWinner, Mode } from './features/board/ticTacToe';
+
+const MODES: { mode: Mode, label: string }[] = [
+    { mode: 'good', label: 'The Good' },
+    { mode: 'bad', label: 'The Bad' },
+    { mode: 'ugly', label: 'The Ugly' },
+];
 
 export default function TicTacToeApp () {
     const board = useSelector(selectors.getCurrentBoard);
@@ -9,6 +15,7 @@ export default function TicTacToeApp () {
     const [ showOverlay, setShowOverlay ] = useState(true);
     const [ showMessage, setShowMessage ] = useState(false);
     const [ message, setMessage ] = useState("");
+    const [ mode, setMode ] = useState<Mode>('bad');
 
     useEffect(() => {
         const winner = findWinner(board);
@@ -27,10 +34,22 @@ export default function TicTacToeApp () {
             <div className="tictactoe-overlay">
                 <div className="overlay-content">
                     <div className="text-container">
-                        The AI plays perfectly, the best you can do is tie the game.
+                        Pick your opponent, then choose which side to play.
+                    </div>
+                    <div className="mode-container">
+                        {MODES.map(({ mode: candidateMode, label }) => (
+                            <button
+                                key={candidateMode}
+                                className={candidateMode === mode ? 'selected' : ''}
+                                onClick={() => setMode(candidateMode)}
+                            >
+                                {label}
+                            </button>
+                        ))}
                     </div>
                     <div className="button-container">
                         <button onClick={() => {
+                            dispatch({ type: actionTypes.SET_MODE, mode });
                             dispatch({ type: actionTypes.RESET });
                             setShowOverlay(!showOverlay)
                             }
@@ -38,6 +57,7 @@ export default function TicTacToeApp () {
                             Play as X
                         </button>
                         <button onClick={() => {
+                                dispatch({ type: actionTypes.SET_MODE, mode });
                                 dispatch({ type: actionTypes.RESET });
                                 dispatch({ type: actionTypes.INIT });
                                 setShowOverlay(!showOverlay);

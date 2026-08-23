@@ -1,9 +1,10 @@
-import { 
+import {
 	INIT, CLICK_ONE, CLICK_TWO, CLICK_THREE,
 	CLICK_FOUR, CLICK_FIVE, CLICK_SIX,
-	CLICK_SEVEN, CLICK_EIGHT, CLICK_NINE, 
-	BEST_MOVE, RESET,
+	CLICK_SEVEN, CLICK_EIGHT, CLICK_NINE,
+	BEST_MOVE, RESET, SET_MODE,
 } from './actionTypes';
+import { Mode } from './ticTacToe';
 
 interface InitBoardAction {
 	type: typeof INIT
@@ -41,14 +42,19 @@ interface BestMoveAction {
 interface ResetAction {
 	type: typeof RESET
 }
+interface SetModeAction {
+	type: typeof SET_MODE
+	mode: Mode
+}
 
-export type BoardActionTypes = 
-	InitBoardAction | OneBoardAction | TwoBoardAction | ThreeBoardAction | FourBoardAction | 
+export type BoardActionTypes =
+	InitBoardAction | OneBoardAction | TwoBoardAction | ThreeBoardAction | FourBoardAction |
 	FiveBoardAction | SixBoardAction | SevenBoardAction | EightBoardAction | NineBoardAction |
-	BestMoveAction | ResetAction;
+	BestMoveAction | ResetAction | SetModeAction;
 
 export interface SystemState {
   	board: {
     	value: string[]
+    	mode: Mode
   	}
 }
