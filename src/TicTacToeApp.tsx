@@ -1,124 +1,164 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectors, actionTypes } from './features/board'
-import { findPossibleMoves, findWinner, Mode } from './features/board/ticTacToe';
+import { findPossibleMoves, findWinner, Mode } from './features/board/ticTacToe'
 
-const MODES: { mode: Mode, label: string }[] = [
-    { mode: 'good', label: 'The Good' },
-    { mode: 'bad', label: 'The Bad' },
-    { mode: 'ugly', label: 'The Ugly' },
-];
+const MODES: { mode: Mode; label: string; description: string }[] = [
+  {
+    mode: 'good',
+    label: 'The Good',
+    description: 'The Good always makes the worst move available.',
+  },
+  {
+    mode: 'bad',
+    label: 'The Bad',
+    description:
+      'The Bad always plays optimally to win. The best you can do against it is force a tie.',
+  },
+  {
+    mode: 'ugly',
+    label: 'The Ugly',
+    description: 'The Ugly plays a completely random legal move every turn.',
+  },
+]
 
-export default function TicTacToeApp () {
-    const board = useSelector(selectors.getCurrentBoard);
-    const dispatch = useDispatch();
-    const [ showOverlay, setShowOverlay ] = useState(true);
-    const [ showMessage, setShowMessage ] = useState(false);
-    const [ message, setMessage ] = useState("");
-    const [ mode, setMode ] = useState<Mode>('bad');
+export default function TicTacToeApp() {
+  const board = useSelector(selectors.getCurrentBoard)
+  const dispatch = useDispatch()
+  const [showOverlay, setShowOverlay] = useState(true)
+  const [showMessage, setShowMessage] = useState(false)
+  const [message, setMessage] = useState('')
+  const [mode, setMode] = useState<Mode>('bad')
+  const modeDescription = MODES.find(
+    ({ mode: candidateMode }) => candidateMode === mode
+  )?.description
 
-    useEffect(() => {
-        const winner = findWinner(board);
-        if (winner !== null) {
-            setMessage(`${winner.toUpperCase()} wins!`);
-            setShowMessage(!showMessage);
-        } else if (findPossibleMoves(board).length === 0) {
-            setMessage(`Game over: tie!`);
-            setShowMessage(!showMessage);
-        }
-    }, [board]);
+  useEffect(() => {
+    const winner = findWinner(board)
+    if (winner !== null) {
+      setMessage(`${winner.toUpperCase()} wins!`)
+      setShowMessage(!showMessage)
+    } else if (findPossibleMoves(board).length === 0) {
+      setMessage(`Game over: tie!`)
+      setShowMessage(!showMessage)
+    }
+  }, [board])
 
-    return <div id="tictactoe-container">
-        {showOverlay &&
-            /* Could be in another component */
-            <div className="tictactoe-overlay">
-                <div className="overlay-content">
-                    <div className="text-container">
-                        Pick your opponent, then choose which side to play.
-                    </div>
-                    <div className="mode-container">
-                        {MODES.map(({ mode: candidateMode, label }) => (
-                            <button
-                                key={candidateMode}
-                                className={candidateMode === mode ? 'selected' : ''}
-                                onClick={() => setMode(candidateMode)}
-                            >
-                                {label}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="button-container">
-                        <button onClick={() => {
-                            dispatch({ type: actionTypes.SET_MODE, mode });
-                            dispatch({ type: actionTypes.RESET });
-                            setShowOverlay(!showOverlay)
-                            }
-                        }>
-                            Play as X
-                        </button>
-                        <button onClick={() => {
-                                dispatch({ type: actionTypes.SET_MODE, mode });
-                                dispatch({ type: actionTypes.RESET });
-                                dispatch({ type: actionTypes.INIT });
-                                setShowOverlay(!showOverlay);
-                            }
-                        }>
-                            Play as O
-                        </button>
-                    </div>
-                </div>
+  return (
+    <div id="tictactoe-container">
+      {showOverlay && (
+        /* Could be in another component */
+        <div className="tictactoe-overlay">
+          <div className="overlay-content">
+            <div className="text-container">
+              Pick your opponent, then choose which side to play.
             </div>
-        }
-        {showMessage &&
-            <div className="tictactoe-overlay">
-                <div className="overlay-content message"
-                    onClick={() => {
-                        setShowMessage(!showMessage);
-                        setShowOverlay(!showOverlay);
-                    }}
+            <div className="mode-description">{modeDescription}</div>
+            <div className="mode-container">
+              {MODES.map(({ mode: candidateMode, label }) => (
+                <button
+                  key={candidateMode}
+                  className={candidateMode === mode ? 'selected' : ''}
+                  onClick={() => setMode(candidateMode)}
                 >
-                    <div>{message}</div>
-                    <div>Play again?</div>
-                </div>
+                  {label}
+                </button>
+              ))}
             </div>
-        }
-        <div id="board-container">
-            <div className={board[0]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_ONE });
+            <div className="button-container">
+              <button
+                onClick={() => {
+                  dispatch({ type: actionTypes.SET_MODE, mode })
+                  dispatch({ type: actionTypes.RESET })
+                  setShowOverlay(!showOverlay)
                 }}
-            ></div>
-            <div className={board[1]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_TWO });
+              >
+                Play as X
+              </button>
+              <button
+                onClick={() => {
+                  dispatch({ type: actionTypes.SET_MODE, mode })
+                  dispatch({ type: actionTypes.RESET })
+                  dispatch({ type: actionTypes.INIT })
+                  setShowOverlay(!showOverlay)
                 }}
-            ></div>
-            <div className={board[2]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_THREE });
-                }}
-            ></div>
-            <div className={board[3]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_FOUR });
-                }}
-            ></div>
-            <div className={board[4]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_FIVE });
-                }}
-            ></div>
-            <div className={board[5]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_SIX });
-                }}
-            ></div>
-            <div className={board[6]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_SEVEN });
-                }}
-            ></div>
-            <div className={board[7]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_EIGHT });
-                }}
-            ></div>
-            <div className={board[8]} onClick={() => {
-                    dispatch({ type: actionTypes.CLICK_NINE });
-                }}
-            ></div>
+              >
+                Play as O
+              </button>
+            </div>
+          </div>
         </div>
+      )}
+      {showMessage && (
+        <div className="tictactoe-overlay">
+          <div
+            className="overlay-content message"
+            onClick={() => {
+              setShowMessage(!showMessage)
+              setShowOverlay(!showOverlay)
+            }}
+          >
+            <div>{message}</div>
+            <div>Play again?</div>
+          </div>
+        </div>
+      )}
+      <div id="board-container">
+        <div
+          className={board[0]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_ONE })
+          }}
+        ></div>
+        <div
+          className={board[1]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_TWO })
+          }}
+        ></div>
+        <div
+          className={board[2]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_THREE })
+          }}
+        ></div>
+        <div
+          className={board[3]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_FOUR })
+          }}
+        ></div>
+        <div
+          className={board[4]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_FIVE })
+          }}
+        ></div>
+        <div
+          className={board[5]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_SIX })
+          }}
+        ></div>
+        <div
+          className={board[6]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_SEVEN })
+          }}
+        ></div>
+        <div
+          className={board[7]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_EIGHT })
+          }}
+        ></div>
+        <div
+          className={board[8]}
+          onClick={() => {
+            dispatch({ type: actionTypes.CLICK_NINE })
+          }}
+        ></div>
+      </div>
     </div>
+  )
 }
