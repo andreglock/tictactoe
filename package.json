@@ -1,13 +1,14 @@
 {
   "name": "tic-tac-toe",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
-    "cra-template-typescript-redux": "0.3.13",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-redux": "9.3.0",
     "react-scripts": "5.0.0",
-    "sass": "^1.49.9"
+    "redux": "5.0.1",
+    "sass": "1.49.9"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -16,7 +17,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "fix": "eslint src --ext .js,.jsx,.ts,.tsx  --fix",
-    "predeploy": "npm run build",
+    "predeploy": "pnpm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
@@ -36,6 +37,10 @@
   },
   "homepage": "http://andreglock.github.io/tictactoe",
   "devDependencies": {
-    "gh-pages": "^3.2.3"
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "typescript": "5.9.3",
+    "gh-pages": "3.2.3"
   }
 }
+ 
